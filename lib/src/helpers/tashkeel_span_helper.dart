@@ -2,10 +2,11 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 
 bool _isTashkeelCodePoint(int codePoint) {
-  return (codePoint >= 0x0617 && codePoint <= 0x061A) ||
-      (codePoint >= 0x064B && codePoint <= 0x0652) ||
+  return (codePoint >= 0x0610 && codePoint <= 0x061A) ||
+      (codePoint >= 0x064B && codePoint <= 0x065F) ||
       codePoint == 0x0670 ||
-      (codePoint >= 0x06D6 && codePoint <= 0x06ED);
+      (codePoint >= 0x06D6 && codePoint <= 0x06ED) ||
+      (codePoint >= 0x08D3 && codePoint <= 0x08FF);
 }
 
 /// Returns true when [char] is one Arabic diacritic/tashkeel code point.

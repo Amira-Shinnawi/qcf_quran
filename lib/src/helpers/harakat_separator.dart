@@ -14,15 +14,12 @@ class TextSegment {
 
 /// Checks if a code point is an Arabic harakat/diacritical mark
 bool _isHarakatCodePoint(int codePoint) {
-  return (codePoint >= 0x0617 &&
-          codePoint <= 0x061A) || // ARABIC SMALL FATHA, DAMMAH, KASRA, SHADDA
-      (codePoint >= 0x064B &&
-          codePoint <= 0x0652) || // ARABIC FATHATAN through ARABIC SUKUN
-      codePoint == 0x0670 || // ARABIC LETTER SUPERSCRIPT ALEF
-      (codePoint >= 0x06D6 &&
-          codePoint <=
-              0x06ED) || // ARABIC SMALL HIGH LIGATURE SAD WITH LAM WITH ALEF, etc.
-      codePoint == 0x061C; // ARABIC LETTER MARK (if needed)
+  return (codePoint >= 0x0610 && codePoint <= 0x061A) ||
+      (codePoint >= 0x064B && codePoint <= 0x065F) ||
+      codePoint == 0x0670 ||
+      (codePoint >= 0x06D6 && codePoint <= 0x06ED) ||
+      codePoint == 0x061C ||
+      (codePoint >= 0x08D3 && codePoint <= 0x08FF);
 }
 
 /// Returns true if the character is a single Arabic harakat
