@@ -1,8 +1,9 @@
 import 'dart:io';
 
+import 'package:example/harakat_separator_example_page.dart';
+import 'package:example/qcf_verses_example_page.dart';
 import 'package:example/quran_home_page.dart';
 import 'package:example/surah_list_page.dart';
-import 'package:example/qcf_verses_example_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -154,6 +155,16 @@ class MyHomePage extends StatelessWidget {
                     ),
                   ),
               child: const Text('📖 View QcfVerses Examples'),
+            ),
+            const SizedBox(height: 12),
+            ElevatedButton(
+              onPressed:
+                  () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const HarakatSeparatorExamplePage(),
+                    ),
+                  ),
+              child: const Text('📝 Harakat Separation Examples'),
             ),
             const SizedBox(height: 12),
             const Text("Example: Multiple Verses (Al-Fatiha):"),

@@ -8,22 +8,27 @@
 /// - Data helpers: page, surah, juz mappings and Quran text
 /// - Utility functions: arabic numerals, normalization, simple search
 ///
-import 'src/data/page_data.dart';
+library;
+
 import 'src/data/juzs.dart';
-import 'src/data/suwar.dart';
+import 'src/data/page_data.dart';
 import 'src/data/quran_text.dart';
-export 'src/qcf_verse.dart';
-export 'src/qcf_verses.dart';
+import 'src/data/suwar.dart';
+
 export 'src/data/page_font_size.dart';
-export 'src/helpers/convert_to_arabic_number.dart';
-export 'src/quran_pageview.dart';
 export 'src/header_widget.dart';
+export 'src/helpers/convert_to_arabic_number.dart';
+export 'src/helpers/harakat_separator.dart';
+export 'src/helpers/harakat_widgets.dart';
+export 'src/helpers/quran_text_processor.dart';
+export 'src/helpers/surah_font_helper.dart';
+export 'src/helpers/tashkeel_span_helper.dart';
 export 'src/qcf_page.dart';
 export 'src/qcf_theme_data.dart';
-export 'src/helpers/surah_font_helper.dart';
+export 'src/qcf_verse.dart';
+export 'src/qcf_verses.dart';
 export 'src/quran_content_verse.dart';
-export 'src/helpers/quran_text_processor.dart';
-export 'src/helpers/tashkeel_span_helper.dart';
+export 'src/quran_pageview.dart';
 export 'src/quran_tashkeel_example.dart';
 
 List getPageData(int pageNumber) {
