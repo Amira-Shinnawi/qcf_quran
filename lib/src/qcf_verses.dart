@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 import 'package:qcf_quran/qcf_quran.dart';
-import 'package:qcf_quran/src/helpers/tashkeel_span_helper.dart';
 
 /// A widget that renders multiple verses from the Quran in QCF format.
 ///
@@ -225,8 +224,8 @@ class QcfVerses extends StatelessWidget {
       );
 
       verseSpans.addAll(
-        buildTashkeelTextSpans(
-          text: verseTextWithoutNumber,
+        buildQuranTextSpans(
+          verseTextWithoutNumber,
           tashkeelColor: tashkeelColor ?? effectiveTheme.tashkeelColor,
           style: TextStyle(
             fontFamily: fontFamily,

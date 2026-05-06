@@ -23,15 +23,22 @@ class MyApp extends StatelessWidget {
       enableScaleText: () => false,
       minTextAdapt: true,
       designSize: const Size(392.72727272727275, 800.7272727272727),
-      
+
       builder: (context, c) {
         return MediaQuery(
           data: MediaQuery.of(
             context,
           ).copyWith(textScaler: TextScaler.linear(1)),
-          child: Platform.isIOS
-              ? CupertinoApp(title: 'Quran qcf Demo', home: const MyHomePage())
-              : MaterialApp(title: 'Quran qcf Demo', home: const MyHomePage()),
+          child:
+              Platform.isIOS
+                  ? CupertinoApp(
+                    title: 'Quran qcf Demo',
+                    home: const MyHomePage(),
+                  )
+                  : MaterialApp(
+                    title: 'Quran qcf Demo',
+                    home: const MyHomePage(),
+                  ),
         );
       },
     );
@@ -80,16 +87,22 @@ class MyHomePage extends StatelessWidget {
             const SizedBox(height: 12),
 
             ElevatedButton(
-              onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const QuranHomePage()),
-              ),
+              onPressed:
+                  () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const QuranHomePage(),
+                    ),
+                  ),
               child: const Text(' Quran Home Page'),
             ),
             const SizedBox(height: 12),
             ElevatedButton(
-              onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const SurahListPage()),
-              ),
+              onPressed:
+                  () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const SurahListPage(),
+                    ),
+                  ),
               child: const Text('📖 Surah List'),
             ),
 
@@ -113,6 +126,19 @@ class MyHomePage extends StatelessWidget {
             ),
 
             const SizedBox(height: 24),
+            const Text("Example: Standard Quran text with red tashkeel:"),
+            const SizedBox(height: 8),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 22, horizontal: 12),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey.shade300),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const QuranTashkeelExample(),
+            ),
+
+            const SizedBox(height: 24),
 
             /// QcfVerses Widget
             Text(
@@ -121,11 +147,12 @@ class MyHomePage extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             ElevatedButton(
-              onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const QcfVersesExamplePage(),
-                ),
-              ),
+              onPressed:
+                  () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const QcfVersesExamplePage(),
+                    ),
+                  ),
               child: const Text('📖 View QcfVerses Examples'),
             ),
             const SizedBox(height: 12),

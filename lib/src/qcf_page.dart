@@ -1,7 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:qcf_quran/qcf_quran.dart';
-import 'package:qcf_quran/src/helpers/tashkeel_span_helper.dart';
 
 /// A widget that renders a single page of the Quran.
 ///
@@ -206,8 +205,8 @@ class QcfPage extends StatelessWidget {
         }
 
         verseSpans.addAll(
-          buildTashkeelTextSpans(
-            text: textWithoutSymbol,
+          buildQuranTextSpans(
+            textWithoutSymbol,
             tashkeelColor: tashkeelColor ?? theme.tashkeelColor,
             recognizer: recognizer,
             style:
@@ -237,34 +236,34 @@ class QcfPage extends StatelessWidget {
                     width: double.infinity,
                     child: Padding(
                       padding: EdgeInsets.zero,
-                      child: Text.rich(
-                        TextSpan(children: verseSpans),
+                      child: RichText(
+                        text: TextSpan(
+                          children: verseSpans,
+                          style: TextStyle(
+                            fontFamily: pageFont,
+                            package: 'qcf_quran',
+                            fontSize:
+                                isPortrait
+                                    ? baseFontSize
+                                    : (pageNumber == 1 || pageNumber == 2)
+                                    ? 20 * sp
+                                    : baseFontSize - (17 * sp),
+                            color: theme.verseTextColor,
+                            height:
+                                isPortrait
+                                    ? (pageNumber == 1 || pageNumber == 2)
+                                        ? 2.2 * h
+                                        : theme.verseHeight * h
+                                    : (pageNumber == 1 || pageNumber == 2)
+                                    ? 4 * h
+                                    : 4 * h,
+                            letterSpacing: theme.letterSpacing,
+                            wordSpacing: theme.wordSpacing,
+                          ),
+                        ),
                         locale: const Locale("ar"),
                         textAlign: TextAlign.center,
                         textDirection: TextDirection.rtl,
-                        style: TextStyle(
-                          fontFamily: pageFont,
-                          package: 'qcf_quran',
-                          fontSize:
-                              isPortrait
-                                  ? baseFontSize
-                                  : (pageNumber == 1 || pageNumber == 2)
-                                  ? 20 * sp
-                                  : baseFontSize - (17 * sp),
-                          color: theme.verseTextColor,
-                          height:
-                              isPortrait
-                                  ? (pageNumber == 1 || pageNumber == 2)
-                                      ? 2.2 * h
-                                      : theme.verseHeight * h
-                                  : (pageNumber == 1 || pageNumber == 2)
-                                  ? 4 *
-                                      h // simplified based on user's manual edit evaluation
-                                  : 4 *
-                                      h, // simplified based on user's manual edit evaluation
-                          letterSpacing: theme.letterSpacing,
-                          wordSpacing: theme.wordSpacing,
-                        ),
                       ),
                     ),
                   ),

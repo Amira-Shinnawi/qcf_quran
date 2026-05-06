@@ -23,6 +23,8 @@ export 'src/qcf_theme_data.dart';
 export 'src/helpers/surah_font_helper.dart';
 export 'src/quran_content_verse.dart';
 export 'src/helpers/quran_text_processor.dart';
+export 'src/helpers/tashkeel_span_helper.dart';
+export 'src/quran_tashkeel_example.dart';
 
 List getPageData(int pageNumber) {
   if (pageNumber < 1 || pageNumber > 604) {

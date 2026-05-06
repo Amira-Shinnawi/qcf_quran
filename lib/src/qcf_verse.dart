@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter/gestures.dart';
 import 'package:qcf_quran/qcf_quran.dart';
-import 'package:qcf_quran/src/helpers/tashkeel_span_helper.dart';
 
 class QcfVerse extends StatefulWidget {
   final int surahNumber;
@@ -109,8 +108,8 @@ class _QcfVerseState extends State<QcfVerse> {
       text: TextSpan(
         locale: const Locale("ar"),
         children: [
-          ...buildTashkeelTextSpans(
-            text: textWithoutSymbol,
+          ...buildQuranTextSpans(
+            textWithoutSymbol,
             tashkeelColor: widget.tashkeelColor ?? effectiveTheme.tashkeelColor,
             recognizer:
                 LongPressGestureRecognizer()

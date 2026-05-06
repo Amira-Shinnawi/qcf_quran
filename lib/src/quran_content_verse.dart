@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:qcf_quran/src/helpers/quran_text_processor.dart';
+import 'package:qcf_quran/src/helpers/tashkeel_span_helper.dart';
 
 /// A widget that renders standard Arabic Quran text (from the "content" field)
 /// with separate colors for letters and diacritics (tashkeel).
@@ -42,8 +42,8 @@ class QuranContentVerse extends StatelessWidget {
       textAlign: textAlign,
       textDirection: textDirection,
       text: TextSpan(
-        children: QuranTextProcessor.buildSpans(
-          text: content,
+        children: buildQuranTextSpans(
+          content,
           letterStyle: TextStyle(
             color: letterColor,
             fontSize: fontSize,
