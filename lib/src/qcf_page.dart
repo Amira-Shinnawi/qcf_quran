@@ -182,16 +182,21 @@ class QcfPage extends StatelessWidget {
           );
         }
 
+        final effectiveTashkeelColor = tashkeelColor ?? theme.tashkeelColor;
+        final bool useStandardText = effectiveTashkeelColor != null;
+
         // Check if the original string had a trailing newline so we can append it
         // after the colored glyph span without it affecting the background color box.
-        final String fullVerseText = getVerseQCF(
-          surah,
-          v,
-          verseEndSymbol: true,
-        );
+        final String fullVerseText =
+            useStandardText
+                ? getVerse(surah, v, verseEndSymbol: true)
+                : getVerseQCF(surah, v, verseEndSymbol: true);
         final bool hasTrailingNewline = fullVerseText.endsWith('\n');
 
-        String textWithoutSymbol = getVerseQCF(surah, v, verseEndSymbol: false);
+        String textWithoutSymbol =
+            useStandardText
+                ? getVerse(surah, v, verseEndSymbol: false)
+                : getVerseQCF(surah, v, verseEndSymbol: false);
 
         // Remove leading newline for the first verse in the range
         if (v == ranges[0]['start'] && textWithoutSymbol.startsWith("\n")) {
@@ -207,12 +212,13 @@ class QcfPage extends StatelessWidget {
         verseSpans.addAll(
           buildQuranTextSpans(
             textWithoutSymbol,
-            tashkeelColor: tashkeelColor ?? theme.tashkeelColor,
+            tashkeelColor: effectiveTashkeelColor,
             recognizer: recognizer,
-            style:
-                verseBgColor != null
-                    ? TextStyle(backgroundColor: verseBgColor)
-                    : const TextStyle(),
+            style: TextStyle(
+              backgroundColor: verseBgColor,
+              fontFamily: useStandardText ? null : pageFont,
+              package: useStandardText ? null : 'qcf_quran',
+            ),
           ),
         );
         verseSpans.add(verseNumberSpan);
