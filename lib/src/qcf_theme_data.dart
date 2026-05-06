@@ -38,6 +38,14 @@ class QcfThemeData {
   /// Default: `Colors.black`
   final Color headerTextColor;
 
+  /// Optional color for Quranic diacritics/tashkeel when the rendered text
+  /// contains Unicode combining marks.
+  ///
+  /// QCF page-font ligature data stores most marks inside single glyphs, so
+  /// Flutter cannot recolor those baked marks separately from the base glyph.
+  /// If null, diacritics use [verseTextColor].
+  final Color? tashkeelColor;
+
   // ============ Background Colors ============
 
   /// Background color for the entire page.
@@ -168,6 +176,7 @@ class QcfThemeData {
     this.verseNumberColor = const Color(0xFF8B4513), // brown
     this.basmalaColor = Colors.black,
     this.headerTextColor = Colors.black,
+    this.tashkeelColor,
 
     // Background Colors
     this.pageBackgroundColor = const Color(0xFFFFFFFF),
@@ -211,6 +220,7 @@ class QcfThemeData {
     Color? verseNumberColor,
     Color? basmalaColor,
     Color? headerTextColor,
+    Color? tashkeelColor,
     Color? pageBackgroundColor,
     Color? Function(int surahNumber, int verseNumber)? verseBackgroundColor,
     Color? verseNumberBackgroundColor,
@@ -235,13 +245,15 @@ class QcfThemeData {
     Widget Function(int surahNumber)? customHeaderBuilder,
     double? headerBorderRadius,
     Widget Function(int surahNumber)? basmalaBuilder,
-    InlineSpan Function(int surah, int verse, String verseNumber)? verseNumberBuilder,
+    InlineSpan Function(int surah, int verse, String verseNumber)?
+    verseNumberBuilder,
   }) {
     return QcfThemeData(
       verseTextColor: verseTextColor ?? this.verseTextColor,
       verseNumberColor: verseNumberColor ?? this.verseNumberColor,
       basmalaColor: basmalaColor ?? this.basmalaColor,
       headerTextColor: headerTextColor ?? this.headerTextColor,
+      tashkeelColor: tashkeelColor ?? this.tashkeelColor,
       pageBackgroundColor: pageBackgroundColor ?? this.pageBackgroundColor,
       verseBackgroundColor: verseBackgroundColor ?? this.verseBackgroundColor,
       verseNumberBackgroundColor:
@@ -281,7 +293,8 @@ class QcfThemeData {
   /// Custom builder for verse numbers.
   /// If provided, replaces the default verse number text style.
   /// Must return an [InlineSpan] because it's rendered inside a Text.rich.
-  final InlineSpan Function(int surah, int verse, String verseNumber)? verseNumberBuilder;
+  final InlineSpan Function(int surah, int verse, String verseNumber)?
+  verseNumberBuilder;
   factory QcfThemeData.dark() {
     return const QcfThemeData(
       verseTextColor: Color(0xFFE0E0E0),

@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:qcf_quran/qcf_quran.dart';
+import 'package:qcf_quran/src/helpers/tashkeel_span_helper.dart';
 
 /// A widget that renders multiple verses from the Quran in QCF format.
 ///
@@ -59,6 +60,13 @@ class QcfVerses extends StatelessWidget {
   /// If null, uses automatic page-based sizing.
   final double? fontSize;
 
+  /// Optional color for Quranic diacritics/tashkeel when the rendered text
+  /// contains Unicode combining marks.
+  ///
+  /// QCF ligature glyphs cannot expose baked marks for separate coloring.
+  /// If null, diacritics use the normal verse text color.
+  final Color? tashkeelColor;
+
   const QcfVerses({
     super.key,
     required this.surahNumber,
@@ -71,6 +79,7 @@ class QcfVerses extends StatelessWidget {
     this.sp = 1.0,
     this.h = 1.0,
     this.fontSize,
+    this.tashkeelColor,
   }) : assert(firstVerse <= lastVerse, 'firstVerse must be <= lastVerse'),
        assert(
          surahNumber >= 1 && surahNumber <= 114,
@@ -112,7 +121,6 @@ class QcfVerses extends StatelessWidget {
         verseEndSymbol: true,
       );
 
-
       int pageNumber = getPageNumber(surahNumber, verseNumber);
       String fontFamily = "QCF_P${pageNumber.toString().padLeft(3, '0')}";
 
@@ -130,12 +138,13 @@ class QcfVerses extends StatelessWidget {
         verseNumber,
         verseEndSymbol: false,
       );
-      if(isPageEnd){
-        verseTextWithoutNumber = verseTextWithoutNumber+"\n";
+      if (isPageEnd) {
+        verseTextWithoutNumber = "$verseTextWithoutNumber\n";
       }
 
       // Remove leading newline for the first verse in the range
-      if (verseNumber == firstVerse && verseTextWithoutNumber.startsWith("\n")) {
+      if (verseNumber == firstVerse &&
+          verseTextWithoutNumber.startsWith("\n")) {
         verseTextWithoutNumber = verseTextWithoutNumber.replaceFirst("\n", "");
       }
 
@@ -215,9 +224,10 @@ class QcfVerses extends StatelessWidget {
         verseNumber,
       );
 
-      verseSpans.add(
-        TextSpan(
+      verseSpans.addAll(
+        buildTashkeelTextSpans(
           text: verseTextWithoutNumber,
+          tashkeelColor: tashkeelColor ?? effectiveTheme.tashkeelColor,
           style: TextStyle(
             fontFamily: fontFamily,
             package: 'qcf_quran',
@@ -228,9 +238,9 @@ class QcfVerses extends StatelessWidget {
             color: effectiveTheme.verseTextColor,
             backgroundColor: verseBgColor,
           ),
-          children: verseChildren.isNotEmpty ? verseChildren : null,
         ),
       );
+      verseSpans.addAll(verseChildren);
     }
 
     return verseSpans;

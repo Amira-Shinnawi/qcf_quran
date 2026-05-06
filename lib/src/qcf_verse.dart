@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter/gestures.dart';
 import 'package:qcf_quran/qcf_quran.dart';
+import 'package:qcf_quran/src/helpers/tashkeel_span_helper.dart';
 
 class QcfVerse extends StatefulWidget {
   final int surahNumber;
@@ -14,6 +15,13 @@ class QcfVerse extends StatefulWidget {
   /// Verse text color.
   /// DEPRECATED: Use theme.verseTextColor instead.
   final Color textColor;
+
+  /// Optional color for Quranic diacritics/tashkeel when the rendered text
+  /// contains Unicode combining marks.
+  ///
+  /// QCF ligature glyphs cannot expose baked marks for separate coloring.
+  /// If null, diacritics use the normal verse text color.
+  final Color? tashkeelColor;
 
   /// Background color for verse.
   /// DEPRECATED: Use theme.verseBackgroundColor instead.
@@ -37,6 +45,7 @@ class QcfVerse extends StatefulWidget {
     this.fontSize,
     this.theme,
     this.textColor = const Color(0xFF000000),
+    this.tashkeelColor,
     this.backgroundColor = const Color(0x00000000),
     this.onLongPress,
     this.onLongPressUp,
@@ -63,7 +72,9 @@ class _QcfVerseState extends State<QcfVerse> {
           widget.surahNumber,
           widget.verseNumber,
         ) ??
-        (widget.backgroundColor.alpha > 0 ? widget.backgroundColor : null);
+        ((widget.backgroundColor.a * 255.0).round().clamp(0, 255) > 0
+            ? widget.backgroundColor
+            : null);
 
     final String fontFamily = "QCF_P${pageNumber.toString().padLeft(3, '0')}";
     final double effectiveFontSize =
@@ -96,15 +107,28 @@ class _QcfVerseState extends State<QcfVerse> {
       textDirection: TextDirection.rtl,
       textAlign: TextAlign.center,
       text: TextSpan(
-        recognizer:
-            LongPressGestureRecognizer()
-              ..onLongPress = widget.onLongPress
-              ..onLongPressDown = widget.onLongPressDown
-              ..onLongPressUp = widget.onLongPressUp
-              ..onLongPressCancel = widget.onLongPressCancel,
-        text: textWithoutSymbol,
         locale: const Locale("ar"),
         children: [
+          ...buildTashkeelTextSpans(
+            text: textWithoutSymbol,
+            tashkeelColor: widget.tashkeelColor ?? effectiveTheme.tashkeelColor,
+            recognizer:
+                LongPressGestureRecognizer()
+                  ..onLongPress = widget.onLongPress
+                  ..onLongPressDown = widget.onLongPressDown
+                  ..onLongPressUp = widget.onLongPressUp
+                  ..onLongPressCancel = widget.onLongPressCancel,
+            style: TextStyle(
+              color: verseTextColor,
+              height: effectiveTheme.verseHeight / widget.h,
+              letterSpacing: effectiveTheme.letterSpacing,
+              package: 'qcf_quran',
+              wordSpacing: effectiveTheme.wordSpacing,
+              fontFamily: fontFamily,
+              fontSize: effectiveFontSize,
+              backgroundColor: verseBgColor,
+            ),
+          ),
           TextSpan(
             text: verseNumberGlyph,
             style: TextStyle(
@@ -119,16 +143,6 @@ class _QcfVerseState extends State<QcfVerse> {
           ),
           if (hasTrailingNewline) const TextSpan(text: '\n'),
         ],
-        style: TextStyle(
-          color: verseTextColor,
-          height: effectiveTheme.verseHeight / widget.h,
-          letterSpacing: effectiveTheme.letterSpacing,
-          package: 'qcf_quran',
-          wordSpacing: effectiveTheme.wordSpacing,
-          fontFamily: fontFamily,
-          fontSize: effectiveFontSize,
-          backgroundColor: verseBgColor,
-        ),
       ),
     );
   }

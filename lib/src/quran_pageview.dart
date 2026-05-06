@@ -33,6 +33,13 @@ class PageviewQuran extends StatefulWidget {
   /// DEPRECATED: Use theme.verseTextColor instead.
   final Color textColor;
 
+  /// Optional color for Quranic diacritics/tashkeel when the rendered text
+  /// contains Unicode combining marks.
+  ///
+  /// QCF ligature glyphs cannot expose baked marks for separate coloring.
+  /// DEPRECATED: Use theme.tashkeelColor instead.
+  final Color? tashkeelColor;
+
   /// Background color for the whole page container.
   /// DEPRECATED: Use theme.pageBackgroundColor instead.
   final Color pageBackgroundColor;
@@ -70,6 +77,7 @@ class PageviewQuran extends StatefulWidget {
     this.h = 1,
     this.theme,
     this.textColor = const Color(0xFF000000),
+    this.tashkeelColor,
     this.pageBackgroundColor = const Color(0xFFFFFFFF),
     this.verseBackgroundColor,
     this.onLongPress,
@@ -121,14 +129,15 @@ class _PageviewQuranState extends State<PageviewQuran> {
           controller: _controller,
           reverse: false, // right-to-left paging order
           itemCount: totalPagesCount,
-          onPageChanged: (index) =>
-              widget.onPageChanged?.call(index + 1), // 1-based
+          onPageChanged:
+              (index) => widget.onPageChanged?.call(index + 1), // 1-based
           itemBuilder: (context, index) {
             final pageNumber = index + 1; // 1-based page
             return QcfPage(
               pageNumber: pageNumber,
               fontSize: widget.fontSize,
               // textColor: widget.textColor, // Deprecated and unused in modern renderer
+              tashkeelColor: widget.tashkeelColor,
               verseBackgroundColor: widget.verseBackgroundColor,
               onLongPress: widget.onLongPress,
               onLongPressUp: widget.onLongPressUp,

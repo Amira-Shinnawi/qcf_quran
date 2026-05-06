@@ -1,9 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:qcf_quran/qcf_quran.dart';
-import 'package:qcf_quran/src/header_widget.dart';
-// ignore: implementation_imports
-import 'package:qcf_quran/src/data/page_font_size.dart';
+import 'package:qcf_quran/src/helpers/tashkeel_span_helper.dart';
 
 /// A widget that renders a single page of the Quran.
 ///
@@ -53,6 +51,13 @@ class QcfPage extends StatelessWidget {
   /// This takes precedence over [theme.verseBackgroundColor] if provided.
   final Color? Function(int surahNumber, int verseNumber)? verseBackgroundColor;
 
+  /// Optional color for Quranic diacritics/tashkeel when the rendered text
+  /// contains Unicode combining marks.
+  ///
+  /// QCF ligature glyphs cannot expose baked marks for separate coloring.
+  /// If null, uses [theme.tashkeelColor].
+  final Color? tashkeelColor;
+
   const QcfPage({
     super.key,
     required this.pageNumber,
@@ -66,6 +71,7 @@ class QcfPage extends StatelessWidget {
     this.onLongPressDown,
     this.onTap,
     this.verseBackgroundColor,
+    this.tashkeelColor,
   });
 
   @override
@@ -199,20 +205,21 @@ class QcfPage extends StatelessWidget {
               "${textWithoutSymbol.substring(0, 1)}\u200A${textWithoutSymbol.substring(1)}";
         }
 
-        verseSpans.add(
-          TextSpan(
+        verseSpans.addAll(
+          buildTashkeelTextSpans(
             text: textWithoutSymbol,
+            tashkeelColor: tashkeelColor ?? theme.tashkeelColor,
             recognizer: recognizer,
             style:
                 verseBgColor != null
                     ? TextStyle(backgroundColor: verseBgColor)
-                    : null,
-            children: [
-              verseNumberSpan,
-              if (hasTrailingNewline) const TextSpan(text: '\n'),
-            ],
+                    : const TextStyle(),
           ),
         );
+        verseSpans.add(verseNumberSpan);
+        if (hasTrailingNewline) {
+          verseSpans.add(const TextSpan(text: '\n'));
+        }
       }
     }
 
