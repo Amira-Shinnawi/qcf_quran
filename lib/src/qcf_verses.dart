@@ -108,17 +108,19 @@ class QcfVerses extends StatelessWidget {
   ) {
     List<InlineSpan> verseSpans = [];
 
+    final effectiveTashkeelColor = tashkeelColor ?? effectiveTheme.tashkeelColor;
+    final bool useStandardText = effectiveTashkeelColor != null;
+
     for (
       int verseNumber = firstVerse;
       verseNumber <= lastVerse;
       verseNumber++
     ) {
       // Get the verse text and page information
-      String verseText = getVerseQCF(
-        surahNumber,
-        verseNumber,
-        verseEndSymbol: true,
-      );
+      String verseText =
+          useStandardText
+              ? getVerse(surahNumber, verseNumber, verseEndSymbol: true)
+              : getVerseQCF(surahNumber, verseNumber, verseEndSymbol: true);
 
       int pageNumber = getPageNumber(surahNumber, verseNumber);
       String fontFamily = "QCF_P${pageNumber.toString().padLeft(3, '0')}";
@@ -132,11 +134,11 @@ class QcfVerses extends StatelessWidget {
       bool endsWithNewline = verseText.endsWith("\n");
 
       // Remove the verse number glyph. The fixed API handles trailing '\n' correctly.
-      String verseTextWithoutNumber = getVerseQCF(
-        surahNumber,
-        verseNumber,
-        verseEndSymbol: false,
-      );
+      String verseTextWithoutNumber =
+          useStandardText
+              ? getVerse(surahNumber, verseNumber, verseEndSymbol: false)
+              : getVerseQCF(surahNumber, verseNumber, verseEndSymbol: false);
+
       if (isPageEnd) {
         verseTextWithoutNumber = "$verseTextWithoutNumber\n";
       }
@@ -226,9 +228,10 @@ class QcfVerses extends StatelessWidget {
       verseSpans.addAll(
         buildQuranTextSpans(
           verseTextWithoutNumber,
-          tashkeelColor: tashkeelColor ?? effectiveTheme.tashkeelColor,
+          tashkeelColor: effectiveTashkeelColor,
           style: TextStyle(
-            fontFamily: fontFamily,
+            // Use QCF font ONLY when not using standard text (for colors)
+            fontFamily: useStandardText ? null : fontFamily,
             package: 'qcf_quran',
             fontSize: effectiveFontSize,
             height: effectiveTheme.verseHeight / h,

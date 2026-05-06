@@ -75,17 +75,28 @@ class _QcfVerseState extends State<QcfVerse> {
             ? widget.backgroundColor
             : null);
 
+    final effectiveTashkeelColor =
+        widget.tashkeelColor ?? effectiveTheme.tashkeelColor;
+    final bool useStandardText = effectiveTashkeelColor != null;
+
     final String fontFamily = "QCF_P${pageNumber.toString().padLeft(3, '0')}";
     final double effectiveFontSize =
         widget.fontSize ?? pageFontSize / widget.sp;
 
-    // getVerseQCF(verseEndSymbol: false) now correctly strips both the glyph
-    // and trailing '\n' (if any), returning pure verse text.
-    final String textWithoutSymbol = getVerseQCF(
-      widget.surahNumber,
-      widget.verseNumber,
-      verseEndSymbol: false,
-    );
+    // When tashkeelColor is provided, we MUST use standard Unicode text (getVerse)
+    // because QCF ligatures have diacritics baked into the glyphs.
+    final String textWithoutSymbol =
+        useStandardText
+            ? getVerse(
+              widget.surahNumber,
+              widget.verseNumber,
+              verseEndSymbol: false,
+            )
+            : getVerseQCF(
+              widget.surahNumber,
+              widget.verseNumber,
+              verseEndSymbol: false,
+            );
 
     // getVerseNumberQCF now correctly returns the glyph even when followed by '\n'.
     final String verseNumberGlyph = getVerseNumberQCF(
@@ -95,11 +106,18 @@ class _QcfVerseState extends State<QcfVerse> {
 
     // Check if the original string had a trailing newline so we can append it
     // after the colored glyph span without it affecting the background color box.
-    final String fullVerseText = getVerseQCF(
-      widget.surahNumber,
-      widget.verseNumber,
-      verseEndSymbol: true,
-    );
+    final String fullVerseText =
+        useStandardText
+            ? getVerse(
+              widget.surahNumber,
+              widget.verseNumber,
+              verseEndSymbol: true,
+            )
+            : getVerseQCF(
+              widget.surahNumber,
+              widget.verseNumber,
+              verseEndSymbol: true,
+            );
     final bool hasTrailingNewline = fullVerseText.endsWith('\n');
 
     return RichText(
@@ -110,7 +128,7 @@ class _QcfVerseState extends State<QcfVerse> {
         children: [
           ...buildQuranTextSpans(
             textWithoutSymbol,
-            tashkeelColor: widget.tashkeelColor ?? effectiveTheme.tashkeelColor,
+            tashkeelColor: effectiveTashkeelColor,
             recognizer:
                 LongPressGestureRecognizer()
                   ..onLongPress = widget.onLongPress
@@ -123,7 +141,8 @@ class _QcfVerseState extends State<QcfVerse> {
               letterSpacing: effectiveTheme.letterSpacing,
               package: 'qcf_quran',
               wordSpacing: effectiveTheme.wordSpacing,
-              fontFamily: fontFamily,
+              // Use QCF font ONLY when not using standard text (for colors)
+              fontFamily: useStandardText ? null : fontFamily,
               fontSize: effectiveFontSize,
               backgroundColor: verseBgColor,
             ),
